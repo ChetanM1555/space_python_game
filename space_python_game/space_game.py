@@ -16,6 +16,7 @@ green = (0, 150, 0)
 grey = (70,70,70)
 grey2 = (60,60,60)
 grey3 = (50,50,50)
+grey4 = (100,100,100)
 darkgrey = (50,50,50)
 
 clock = pygame.time.Clock()
@@ -52,19 +53,15 @@ def move(x, y, ship):
 
 # -----------------------------------------------------------
 
-def game_loop(lives):
-    font = pygame.font.Font('freesansbold.ttf', 32)
- 
-    # create a text surface object,
-    # on which text is drawn on it.
-
-    
-    # set the center of the rectangular object.
-    clock = pygame.time.Clock()
-    ship = pygame.image.load('k.png')
+def game_loop():
     """
     The main game loop that runs the game
     """
+    lives = 3
+    font = pygame.font.Font('freesansbold.ttf', 32)
+
+    clock = pygame.time.Clock()
+    ship = pygame.image.load('k.png')
     closed = False
     x = (display_width * 0.42)
     y = (display_height * 0.8)
@@ -147,15 +144,13 @@ def game_loop(lives):
                     obst_x += speedx
                     dt = clock.tick()
                     timea += dt
-                    if timea > 3000:
+                    if timea > 2000:
                         break
                     ship = pygame.image.load('k.png')
                 counta += 1
-                # print(count)
-                # closed = True
+
         if counta > 0:
             lives -= 1
-        # print(f"lives: {lives}")
 
         # reset obst if it goes out of bounds
         if obst_y > display_height or obst_x > display_width or obst_y < 0 -display_width  or obst_x < 0 - height :
@@ -187,4 +182,48 @@ def game_loop(lives):
 
 # -----------------------------------------------------------
 
-game_loop(lives)
+def text_objects(text, font):
+    textTop = font.render(text, True, white)
+    return textTop, textTop.get_rect()
+
+# -----------------------------------------------------------
+
+def button(words,x,y,a,b,c,d,action=None):
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    if x+a > mouse[0] > x and y+b > mouse[1] > y:
+        pygame.draw.rect(window, d,(x,y,a,b))
+
+        if click[0] == 1 and action != None:
+            action()         
+    else:
+        pygame.draw.rect(window, c,(x,y,a,b))
+
+    smallText = pygame.font.SysFont("freesansbold.ttf",27)
+    textSurf, textRect = text_objects(words, smallText)
+    textRect.center = ( (x+(a/2)), (y+(b/2)) )
+    window.blit(textSurf, textRect)
+
+# -----------------------------------------------------------
+
+def game_intro():
+
+    intro = True
+    bg = pygame.image.load('space.gif')
+    window.blit(bg, (0,0))
+
+    while intro:
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        button("Run Game", 150, 450, 100, 50, grey3, grey4, game_loop)
+        button("Quit", 550, 450, 100 ,50, grey3, grey4)
+
+        pygame.display.update()
+        clock.tick(15)
+
+game_intro()
+# game_loop()
