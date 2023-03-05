@@ -24,16 +24,20 @@ clock = pygame.time.Clock()
 bg = pygame.image.load('space.gif')
 
 width = 120
-
 lives = 3
-
 
 # -----------------------------------------------------------
 
 def draw1(x,y, height, width):
-    """
-    draws the obstacles that the user has to dodge
-    """
+    """Draws the obastcles
+
+    Args:
+        x (int): x coordinate
+        y (int): x coordinate
+        height (int): height of window
+        width (int): width of window
+    """    
+
     pygame.draw.circle(window, grey2, (x+height/2,y+width/2), width/2)
     pygame.draw.circle(window, grey, (x+height/2+10,y+width/2+10), width/2+5)
     pygame.draw.circle(window, grey, (x+height/2+10,y+width/2-7), width/2-3)
@@ -45,10 +49,25 @@ def draw1(x,y, height, width):
 
 # -----------------------------------------------------------
 
+def draw2(x,y, height, width):
+    
+    pygame.draw.circle(window, grey2, (x+height/2,y+width/2), width/2)
+    pygame.draw.circle(window, grey, (x+height/2+15,y+width/2+15), width/2+5)
+    pygame.draw.circle(window, grey, (x+height/2+15,y+width/2-7), width/2-3)
+    pygame.draw.circle(window, darkgrey, (x+height/2+30,y+width/2), width/6)
+    pygame.draw.circle(window, darkgrey, (x+height/2-17,y+width/2+15), width/9)
+    pygame.draw.circle(window, darkgrey, (x+height/2-10,y+width/2+36), width/9)
+    pygame.draw.circle(window, darkgrey, (x+height/2-10,y+width/2+26), width/9)
+    pygame.draw.circle(window, grey3, (x,y+width), width/9)
+    pygame.draw.circle(window, grey2, (x+width,y+width +30), width/12)
+    pygame.draw.circle(window, grey3, (x+50,y-30), width/9)
+
+# -----------------------------------------------------------
+
 def move(x, y, ship):
-    """
-    moves the user
-    """
+    # """
+    # moves the user
+    # """
     window.blit(ship, (x, y))
 
 # -----------------------------------------------------------
@@ -116,7 +135,10 @@ def game_loop():
             y += y_change
             move(x, y, ship)
             pass
-        draw1(obst_x, obst_y, height, width1)
+        if count %2 :
+            draw1(obst_x, obst_y, height, width1)
+        else:
+            draw2(obst_x, obst_y, height, width1)
         if count%4==0:
             speedx=0
             speedy=obst_speed
@@ -151,6 +173,7 @@ def game_loop():
 
         if counta > 0:
             lives -= 1
+            pass
 
         # reset obst if it goes out of bounds
         if obst_y > display_height or obst_x > display_width or obst_y < 0 -display_width  or obst_x < 0 - height :
@@ -183,12 +206,33 @@ def game_loop():
 # -----------------------------------------------------------
 
 def text_objects(text, font):
+    """_summary_
+
+    Args:
+        text (string): words on button
+        font (string): font of text
+
+    Returns:
+        text: text on buttons
+    """    
     textTop = font.render(text, True, white)
     return textTop, textTop.get_rect()
 
 # -----------------------------------------------------------
 
 def button(words,x,y,a,b,c,d,action=None):
+    """_summary_
+
+    Args:
+        words (_type_): _description_
+        x (int): x coordinate
+        y (int): y coordinate
+        a (int): _description_
+        b (int): _description_
+        c (color): color grey
+        d (color): color lighter grey
+        action (_type_, optional): _description_. Defaults to None.
+    """    
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if x+a > mouse[0] > x and y+b > mouse[1] > y:
@@ -219,7 +263,7 @@ def game_intro():
                 pygame.quit()
                 quit()
 
-        button("Run Game", 150, 450, 100, 50, grey3, grey4, game_loop)
+        button("Run Game", 350, 450, 100, 50, grey3, grey4, game_loop)
         button("Quit", 550, 450, 100 ,50, grey3, grey4)
 
         pygame.display.update()
