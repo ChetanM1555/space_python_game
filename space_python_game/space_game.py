@@ -21,11 +21,13 @@ darkgrey = (50,50,50)
 clock = pygame.time.Clock()
 
 bg = pygame.image.load('space.gif')
-snoop = pygame.image.load('k.png')
+
 width = 120
 
+lives = 3
 
-#-----------------------------------------------------------
+
+# -----------------------------------------------------------
 
 def draw1(x,y, height, width):
     """
@@ -40,17 +42,29 @@ def draw1(x,y, height, width):
     pygame.draw.circle(window, grey3, (x,y+width), width/9)
     pygame.draw.circle(window, grey2, (x+width,y+width +20), width/12)
 
-#-----------------------------------------------------------
+# -----------------------------------------------------------
 
-def move(x, y):
+def move(x, y, ship):
     """
     moves the user
     """
-    window.blit(snoop, (x, y))
+    window.blit(ship, (x, y))
 
-#-----------------------------------------------------------
+# -----------------------------------------------------------
 
-def game_loop():
+def game_loop(lives):
+    font = pygame.font.Font('freesansbold.ttf', 32)
+ 
+    # create a text surface object,
+    # on which text is drawn on it.
+
+    
+    # set the center of the rectangular object.
+    clock = pygame.time.Clock()
+    ship = pygame.image.load('k.png')
+    """
+    The main game loop that runs the game
+    """
     closed = False
     x = (display_width * 0.42)
     y = (display_height * 0.8)
@@ -65,13 +79,16 @@ def game_loop():
     width1 = 100
     count = 0
 
-    while closed == False:
+    while closed == False and lives > 0:
+        text = font.render(f'Lives left: {lives}', True, white)
+        textRect = text.get_rect()
+        textRect.center = (display_height//5.5, display_width//26)
         window.blit(bg, (0,0))
-
+        window.blit(text, textRect)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 closed = True
-            
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     y_change = -5
@@ -94,16 +111,14 @@ def game_loop():
             x_change = 0
             x += x_change
             y += y_change
-            move(x, y)
+            move(x, y, ship)
             pass
         if y > display_height - width or y < 0:
             y_change = 0
             x += x_change
             y += y_change
-            move(x, y)
+            move(x, y, ship)
             pass
-
-
         draw1(obst_x, obst_y, height, width1)
         if count%4==0:
             speedx=0
@@ -119,14 +134,29 @@ def game_loop():
             speedy=0
             speedx=obst_speed2
 
+        timea = 0
         obst_y += speedy
         obst_x += speedx
-        move(x, y)
+        move(x, y, ship)
+        counta = 0
 
         if y < obst_y + height  and y > obst_y or y+height > obst_y and y + height < obst_y + height:
             if x > obst_x and x < obst_x + width1 or x+width > obst_x and x + width < obst_x + width1:
-                closed = True
-        
+                while True:
+                    obst_y += speedy
+                    obst_x += speedx
+                    dt = clock.tick()
+                    timea += dt
+                    if timea > 3000:
+                        break
+                    ship = pygame.image.load('k.png')
+                counta += 1
+                # print(count)
+                # closed = True
+        if counta > 0:
+            lives -= 1
+        # print(f"lives: {lives}")
+
         # reset obst if it goes out of bounds
         if obst_y > display_height or obst_x > display_width or obst_y < 0 -display_width  or obst_x < 0 - height :
             count = random.randint(1,4)
@@ -137,7 +167,6 @@ def game_loop():
             elif count%3==0:
                 obst_x = 0 - height
                 obst_y = random.randrange(0,display_width)
-
             elif count%2==0:
                 obst_y = 600
                 obst_x = random.randrange(0,display_width)
@@ -146,17 +175,16 @@ def game_loop():
                 obst_x = 800
                 obst_y = random.randrange(0,display_width)
                 count = 1
-        
-            # if count%4==0:
-            #     obst_speed+=1
-            #     obst_speed2-=1
-            
-        
+            if count%4==0:
+                obst_speed+=1
+                obst_speed2-=1
+
         pygame.display.update()
         clock.tick(60)
-
 
     pygame.quit()
     quit()
 
-game_loop()
+# -----------------------------------------------------------
+
+game_loop(lives)
