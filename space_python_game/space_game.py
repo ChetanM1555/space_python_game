@@ -50,9 +50,17 @@ def draw1(x,y, height, width):
 # -----------------------------------------------------------
 
 def draw2(x,y, height, width):
+    """Draws a different obastcles
+
+    Args:
+        x (int): x coordinate
+        y (int): x coordinate
+        height (int): height of window
+        width (int): width of window
+    """      
     
     pygame.draw.circle(window, grey2, (x+height/2,y+width/2), width/2)
-    pygame.draw.circle(window, grey, (x+height/2+15,y+width/2+15), width/2+5)
+    pygame.draw.circle(window, grey, (x+height/2+10,y+width/2+15), width/2+5)
     pygame.draw.circle(window, grey, (x+height/2+15,y+width/2-7), width/2-3)
     pygame.draw.circle(window, darkgrey, (x+height/2+30,y+width/2), width/6)
     pygame.draw.circle(window, darkgrey, (x+height/2-17,y+width/2+15), width/9)
@@ -65,9 +73,13 @@ def draw2(x,y, height, width):
 # -----------------------------------------------------------
 
 def move(x, y, ship):
-    # """
-    # moves the user
-    # """
+    """moves the ship
+
+    Args:
+        x (int): x coordinate
+        y (int): y coordinate
+        ship: this is the ship
+    """    
     window.blit(ship, (x, y))
 
 # -----------------------------------------------------------
@@ -173,6 +185,8 @@ def game_loop():
 
         if counta > 0:
             lives -= 1
+            if lives == 0:
+                game_over()
             pass
 
         # reset obst if it goes out of bounds
@@ -221,17 +235,17 @@ def text_objects(text, font):
 # -----------------------------------------------------------
 
 def button(words,x,y,a,b,c,d,action=None):
-    """_summary_
+    """Creates buttons 
 
     Args:
         words (_type_): _description_
         x (int): x coordinate
         y (int): y coordinate
-        a (int): _description_
-        b (int): _description_
+        a (int): width of button
+        b (int): height of button
         c (color): color grey
         d (color): color lighter grey
-        action (_type_, optional): _description_. Defaults to None.
+        action (none)
     """    
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
@@ -251,23 +265,84 @@ def button(words,x,y,a,b,c,d,action=None):
 # -----------------------------------------------------------
 
 def game_intro():
+    """
+    creates game intro
+    """
+    intro = True
+    bg = pygame.image.load('space.gif')
+    window.blit(bg, (0,0))
 
     intro = True
     bg = pygame.image.load('space.gif')
     window.blit(bg, (0,0))
 
+    font = pygame.font.Font('freesansbold.ttf', 40)
+ 
+    # create a text surface object,
+    # on which text is drawn on it.
+    text = font.render('Welcome to my Game', True, white)
+    
+    # create a rectangular object for the
+    # text surface object
+    textRect = text.get_rect()
+    
+    # set the center of the rectangular object.
+    textRect.center = (display_height // 1.5, display_width // 3 )
+
     while intro:
+        window.blit(text, textRect)
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-        button("Run Game", 350, 450, 100, 50, grey3, grey4, game_loop)
-        button("Quit", 550, 450, 100 ,50, grey3, grey4)
+        button("Run Game", 150, 450, 100, 50, grey3, grey4, game_loop)
+        button("Quit", 550, 450, 100 ,50, grey3, grey4, quit)
 
         pygame.display.update()
         clock.tick(15)
 
+# -----------------------------------------------------------
+
+def game_over():
+    '''
+    Create game over screen
+    '''
+    intro = True
+    bg = pygame.image.load('space.gif')
+    window.blit(bg, (0,0))
+
+    font = pygame.font.Font('freesansbold.ttf', 40)
+
+    text = font.render('Game Over', True, white)
+    
+
+    textRect = text.get_rect()
+    
+    textRect.center = (display_height // 1.5, display_width //3 )
+
+    while intro:
+        window.blit(text, textRect)
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        button("Restart Game", 150, 450, 150, 50, grey3, grey4, game_loop)
+        button("Quit", 500, 450, 150 ,50, grey3, grey4, quit)
+
+        pygame.display.update()
+        clock.tick(15)
+    pass
+
+# -----------------------------------------------------------
+
+def quit():
+    pygame.quit()
+    quit()
+
+# -----------------------------------------------------------
+
 game_intro()
-# game_loop()
