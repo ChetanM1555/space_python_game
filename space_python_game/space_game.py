@@ -110,29 +110,32 @@ def game_loop():
     width1 = 100
     count = 0
     start_time = pygame.time.get_ticks()
-    
 
     while closed == False and lives > 0:
         current_time = pygame.time.get_ticks()
 
         # Calculate the elapsed time
         elapsed_time = current_time - start_time
+        hours = int(elapsed_time / (1000 * 60 * 60))
+        minutes = int((elapsed_time / (1000 * 60)) % 60)
+        seconds = int((elapsed_time / 1000) % 60)
 
-        seconds = int(elapsed_time / 1000)
-        #v
-        timer = font.render("Time: " + str(seconds), True, (255, 255, 255))
+        # seconds = int(elapsed_time / 1000)
+        time_string = "{:02d}:{:02d}:{:02d}".format(hours, minutes, seconds)
+        
+        timer = font.render("Time: " + time_string, True, (255, 255, 255))
 
         text = font.render(f'Lives left: {lives}', True, white)
         textRect = text.get_rect()
-        #v
+        
         textRectTime = text.get_rect()
 
         textRect.center = (display_height//5.5, display_width//26)
-        #v
-        textRectTime.center = (display_height//0.8, display_width//26)
+        
+        textRectTime.center = (display_height//0.92, display_width//26)
         window.blit(bg, (0,0))
         window.blit(text, textRect)
-        #v
+        
         window.blit(timer, textRectTime)
 
         for event in pygame.event.get():
