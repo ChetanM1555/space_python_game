@@ -58,7 +58,7 @@ def draw2(x,y, height, width):
         height (int): height of window
         width (int): width of window
     """      
-    
+
     pygame.draw.circle(window, grey2, (x+height/2,y+width/2), width/2)
     pygame.draw.circle(window, grey, (x+height/2+10,y+width/2+15), width/2+5)
     pygame.draw.circle(window, grey, (x+height/2+15,y+width/2-7), width/2-3)
@@ -277,16 +277,11 @@ def game_intro():
     window.blit(bg, (0,0))
 
     font = pygame.font.Font('freesansbold.ttf', 40)
- 
-    # create a text surface object,
-    # on which text is drawn on it.
+
     text = font.render('Welcome to my Game', True, white)
-    
-    # create a rectangular object for the
-    # text surface object
+
     textRect = text.get_rect()
-    
-    # set the center of the rectangular object.
+
     textRect.center = (display_height // 1.5, display_width // 3 )
 
     while intro:
@@ -297,8 +292,9 @@ def game_intro():
                 pygame.quit()
                 quit()
 
-        button("Run Game", 150, 450, 100, 50, grey3, grey4, game_loop)
-        button("Quit", 550, 450, 100 ,50, grey3, grey4, quit)
+        button("High Scores", 325, 380, 150, 50, grey3, grey4, high_score)
+        button("Start Game", 150, 450, 150, 50, grey3, grey4, game_loop)
+        button("Quit", 500, 450, 150 ,50, grey3, grey4, quit)
 
         pygame.display.update()
         clock.tick(15)
@@ -316,10 +312,9 @@ def game_over():
     font = pygame.font.Font('freesansbold.ttf', 40)
 
     text = font.render('Game Over', True, white)
-    
 
     textRect = text.get_rect()
-    
+
     textRect.center = (display_height // 1.5, display_width //3 )
 
     while intro:
@@ -330,12 +325,53 @@ def game_over():
                 pygame.quit()
                 quit()
 
+        button("High Scores", 325, 380, 150, 50, grey3, grey4, high_score)
         button("Restart Game", 150, 450, 150, 50, grey3, grey4, game_loop)
         button("Quit", 500, 450, 150 ,50, grey3, grey4, quit)
 
         pygame.display.update()
         clock.tick(15)
     pass
+
+# -----------------------------------------------------------
+
+def high_score():
+    f = open("score.txt", "r")
+    content = f.read()
+    content=content.splitlines()
+    print(content)
+    intro = True
+    bg = pygame.image.load('space.gif')
+    window.blit(bg, (0,0))
+    font1 = pygame.font.Font('freesansbold.ttf', 40)
+    font = pygame.font.Font('freesansbold.ttf', 30)
+
+    text2 = font1.render('High Score', True, white)
+
+    textRect2 = text2.get_rect()
+
+    textRect2.center = (display_height // 1.5, display_width //8 )
+
+    for i in range(len(content)):
+        text_surface = font.render(content[i], True, (255, 255, 255))
+        window.blit(text_surface, (295, i*30 + 150))
+
+    while intro:
+        window.blit(text2, textRect2)
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        button("Start Game", 150, 450, 150, 50, grey3, grey4, game_loop)
+        button("Quit", 500, 450, 150 ,50, grey3, grey4, quit)
+
+        pygame.display.update()
+        clock.tick(15)
+    f.close()
+    
 
 # -----------------------------------------------------------
 
@@ -346,3 +382,4 @@ def quit():
 # -----------------------------------------------------------
 
 game_intro()
+# high_score()
