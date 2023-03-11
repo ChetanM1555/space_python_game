@@ -2,6 +2,8 @@
 
 import pygame
 import random
+import drawings
+import updateScore
 
 pygame.init()
 
@@ -29,49 +31,6 @@ width = 120
 lives = 3
 time_elapsed = 0
 
-# -----------------------------------------------------------
-
-def draw1(x,y, height, width):
-    """Draws the obastcles
-
-    Args:
-        x (int): x coordinate
-        y (int): x coordinate
-        height (int): height of window
-        width (int): width of window
-    """    
-
-    pygame.draw.circle(window, grey2, (x+height/2,y+width/2), width/2)
-    pygame.draw.circle(window, grey, (x+height/2+10,y+width/2+10), width/2+5)
-    pygame.draw.circle(window, grey, (x+height/2+10,y+width/2-7), width/2-3)
-    pygame.draw.circle(window, darkgrey, (x+height/2+30,y+width/2), width/6)
-    pygame.draw.circle(window, darkgrey, (x+height/2-17,y+width/2+15), width/9)
-    pygame.draw.circle(window, darkgrey, (x+height/2-10,y+width/2+26), width/9)
-    pygame.draw.circle(window, grey3, (x,y+width), width/9)
-    pygame.draw.circle(window, grey2, (x+width,y+width +20), width/12)
-
-# -----------------------------------------------------------
-
-def draw2(x,y, height, width):
-    """Draws a different obastcles
-
-    Args:
-        x (int): x coordinate
-        y (int): x coordinate
-        height (int): height of window
-        width (int): width of window
-    """      
-
-    pygame.draw.circle(window, grey2, (x+height/2,y+width/2), width/2)
-    pygame.draw.circle(window, grey, (x+height/2+10,y+width/2+15), width/2+5)
-    pygame.draw.circle(window, grey, (x+height/2+15,y+width/2-7), width/2-3)
-    pygame.draw.circle(window, darkgrey, (x+height/2+30,y+width/2), width/6)
-    pygame.draw.circle(window, darkgrey, (x+height/2-17,y+width/2+15), width/9)
-    pygame.draw.circle(window, darkgrey, (x+height/2-10,y+width/2+36), width/9)
-    pygame.draw.circle(window, darkgrey, (x+height/2-10,y+width/2+26), width/9)
-    pygame.draw.circle(window, grey3, (x,y+width), width/9)
-    pygame.draw.circle(window, grey2, (x+width,y+width +30), width/12)
-    pygame.draw.circle(window, grey3, (x+50,y-30), width/9)
 
 # -----------------------------------------------------------
 
@@ -91,7 +50,7 @@ def game_loop():
     """
     The main game loop that runs the game
     """
-    lives = 3
+    lives = 1
     font = pygame.font.Font('freesansbold.ttf', 32)
 
     clock = pygame.time.Clock()
@@ -173,9 +132,9 @@ def game_loop():
             move(x, y, ship)
             pass
         if count %2 :
-            draw1(obst_x, obst_y, height, width1)
+            drawings.draw1(obst_x, obst_y, height, width1)
         else:
-            draw2(obst_x, obst_y, height, width1)
+            drawings.draw2(obst_x, obst_y, height, width1)
         if count%4==0:
             speedx=0
             speedy=obst_speed
@@ -211,7 +170,7 @@ def game_loop():
         if counta > 0:
             lives -= 1
             if lives == 0:
-                game_over()
+                game_over(time_string)
             pass
 
         # reset obst if it goes out of bounds
@@ -326,13 +285,17 @@ def game_intro():
 
 # -----------------------------------------------------------
 
-def game_over():
+def game_over(time):
     '''
     Create game over screen
     '''
+    print(time)
+    print(type(time))
+    updateScore.add_new_score(time)
     intro = True
     bg = pygame.image.load('space.gif')
     window.blit(bg, (0,0))
+    
 
     font = pygame.font.Font('freesansbold.ttf', 40)
 
@@ -379,7 +342,7 @@ def high_score():
 
     for i in range(len(content)):
         text_surface = font.render(content[i], True, (255, 255, 255))
-        window.blit(text_surface, (295, i*30 + 150))
+        window.blit(text_surface, (340, i*30 + 150))
 
     while intro:
         window.blit(text2, textRect2)
@@ -405,41 +368,7 @@ def quit():
 
 # -----------------------------------------------------------
 
-def timer():
-    global global_time_elapsed
-    global_time_elapsed += clock.tick(60)
-
-
-
-    # # Set the font and font size
-    # font = pygame.font.SysFont(None, 48)
-
-    # # Set the initial time
-    # time_elapsed = 0
-
-    # # Set the clock
-    # clock = pygame.time.Clock()
-
-    # # Main game loop
-    # while True:
-    #     # Handle events
-        
-
-    #     # Update the timer
-    #     time_elapsed += clock.tick(60)
-
-    #     # Convert time elapsed to seconds and format it
-    #     seconds = int(time_elapsed / 1000)
-    #     text = font.render("Time: " + str(seconds), True, (255, 255, 255))
-
-    #     # Draw the timer on the screen
-    #     window.fill((0, 0, 0))
-    #     window.blit(text, (10, 10))
-
-    #     pygame.display.update()
-
-# -----------------------------------------------------------
-
 game_intro()
+# add_new_score()
 # high_score()
 # timer()
