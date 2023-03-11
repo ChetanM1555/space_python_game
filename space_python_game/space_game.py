@@ -5,6 +5,8 @@ import random
 
 pygame.init()
 
+global_time_elapsed = 0
+
 display_width = 800
 display_height = 600
 
@@ -25,6 +27,7 @@ bg = pygame.image.load('space.gif')
 
 width = 120
 lives = 3
+time_elapsed = 0
 
 # -----------------------------------------------------------
 
@@ -106,13 +109,32 @@ def game_loop():
     height = 100
     width1 = 100
     count = 0
+    start_time = pygame.time.get_ticks()
+    
 
     while closed == False and lives > 0:
+        current_time = pygame.time.get_ticks()
+
+        # Calculate the elapsed time
+        elapsed_time = current_time - start_time
+
+        seconds = int(elapsed_time / 1000)
+        #v
+        timer = font.render("Time: " + str(seconds), True, (255, 255, 255))
+
         text = font.render(f'Lives left: {lives}', True, white)
         textRect = text.get_rect()
+        #v
+        textRectTime = text.get_rect()
+
         textRect.center = (display_height//5.5, display_width//26)
+        #v
+        textRectTime.center = (display_height//0.8, display_width//26)
         window.blit(bg, (0,0))
         window.blit(text, textRect)
+        #v
+        window.blit(timer, textRectTime)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 closed = True
@@ -371,7 +393,6 @@ def high_score():
         pygame.display.update()
         clock.tick(15)
     f.close()
-    
 
 # -----------------------------------------------------------
 
@@ -381,5 +402,41 @@ def quit():
 
 # -----------------------------------------------------------
 
+def timer():
+    global global_time_elapsed
+    global_time_elapsed += clock.tick(60)
+
+
+
+    # # Set the font and font size
+    # font = pygame.font.SysFont(None, 48)
+
+    # # Set the initial time
+    # time_elapsed = 0
+
+    # # Set the clock
+    # clock = pygame.time.Clock()
+
+    # # Main game loop
+    # while True:
+    #     # Handle events
+        
+
+    #     # Update the timer
+    #     time_elapsed += clock.tick(60)
+
+    #     # Convert time elapsed to seconds and format it
+    #     seconds = int(time_elapsed / 1000)
+    #     text = font.render("Time: " + str(seconds), True, (255, 255, 255))
+
+    #     # Draw the timer on the screen
+    #     window.fill((0, 0, 0))
+    #     window.blit(text, (10, 10))
+
+    #     pygame.display.update()
+
+# -----------------------------------------------------------
+
 game_intro()
 # high_score()
+# timer()
