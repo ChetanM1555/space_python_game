@@ -4,6 +4,7 @@ import pygame
 import random
 import drawings
 import updateScore
+import screens as sc
 
 pygame.init()
 
@@ -67,6 +68,8 @@ def game_loop():
     obst_y = -600
     height = 100
     width1 = 100
+    height2 = 155
+    width2 = 60
     count = 0
     start_time = pygame.time.get_ticks()
 
@@ -156,7 +159,7 @@ def game_loop():
         counta = 0
 
         if y < obst_y + height  and y > obst_y or y+height > obst_y and y + height < obst_y + height:
-            if x > obst_x and x < obst_x + width1 or x+width > obst_x and x + width < obst_x + width1:
+            if x > obst_x and x < obst_x + width1 or x+width+5> obst_x and x + width < obst_x + width1:
                 while True:
                     obst_y += speedy
                     obst_x += speedx
@@ -170,8 +173,7 @@ def game_loop():
         if counta > 0:
             lives -= 1
             if lives == 0:
-                game_over(time_string)
-            pass
+                game_intro(False,time_string)
 
         # reset obst if it goes out of bounds
         if obst_y > display_height or obst_x > display_width or obst_y < 0 -display_width  or obst_x < 0 - height :
@@ -248,10 +250,12 @@ def button(words,x,y,a,b,c,d,action=None):
 
 # -----------------------------------------------------------
 
-def game_intro():
+def game_intro(start, time):
     """
     creates game intro
     """
+    if start == False:
+        updateScore.add_new_score(time)
     intro = True
     bg = pygame.image.load('space.gif')
     window.blit(bg, (0,0))
@@ -261,9 +265,10 @@ def game_intro():
     window.blit(bg, (0,0))
 
     font = pygame.font.Font('freesansbold.ttf', 40)
-
-    text = font.render('Welcome to my Game', True, white)
-
+    if start == True:
+        text = font.render('Welcome to my Game', True, white)
+    else:
+        text = font.render('Game Over', True, white)
     textRect = text.get_rect()
 
     textRect.center = (display_height // 1.5, display_width // 3 )
@@ -277,49 +282,11 @@ def game_intro():
                 quit()
 
         button("High Scores", 325, 380, 150, 50, grey3, grey4, high_score)
-        button("Start Game", 150, 450, 150, 50, grey3, grey4, game_loop)
-        button("Quit", 500, 450, 150 ,50, grey3, grey4, quit)
+        button("Start Game", 325, 450, 150, 50, grey3, grey4, game_loop)
+        button("Quit", 325, 520, 150 ,50, grey3, grey4, quit)
 
         pygame.display.update()
         clock.tick(15)
-
-# -----------------------------------------------------------
-
-def game_over(time):
-    '''
-    Create game over screen
-    '''
-    print(time)
-    print(type(time))
-    updateScore.add_new_score(time)
-    intro = True
-    bg = pygame.image.load('space.gif')
-    window.blit(bg, (0,0))
-    
-
-    font = pygame.font.Font('freesansbold.ttf', 40)
-
-    text = font.render('Game Over', True, white)
-
-    textRect = text.get_rect()
-
-    textRect.center = (display_height // 1.5, display_width //3 )
-
-    while intro:
-        window.blit(text, textRect)
-        for event in pygame.event.get():
-
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-        button("High Scores", 325, 380, 150, 50, grey3, grey4, high_score)
-        button("Restart Game", 150, 450, 150, 50, grey3, grey4, game_loop)
-        button("Quit", 500, 450, 150 ,50, grey3, grey4, quit)
-
-        pygame.display.update()
-        clock.tick(15)
-    pass
 
 # -----------------------------------------------------------
 
@@ -327,7 +294,7 @@ def high_score():
     f = open("score.txt", "r")
     content = f.read()
     content=content.splitlines()
-    print(content)
+    # print(content)
     intro = True
     bg = pygame.image.load('space.gif')
     window.blit(bg, (0,0))
@@ -353,12 +320,50 @@ def high_score():
                 pygame.quit()
                 quit()
 
-        button("Start Game", 150, 450, 150, 50, grey3, grey4, game_loop)
-        button("Quit", 500, 450, 150 ,50, grey3, grey4, quit)
+        button("Start Game", 325, 450, 150, 50, grey3, grey4, game_loop)
+        button("Quit", 325, 520, 150 ,50, grey3, grey4, quit)
 
         pygame.display.update()
         clock.tick(15)
     f.close()
+
+# -----------------------------------------------------------
+
+    # def game_over(time):
+#     '''
+#     Create game over screen
+#     '''
+#     # print(time)
+#     # print(type(time))
+#     updateScore.add_new_score(time)
+#     intro = True
+#     bg = pygame.image.load('space.gif')
+#     window.blit(bg, (0,0))
+    
+
+#     font = pygame.font.Font('freesansbold.ttf', 40)
+
+#     text = font.render('Game Over', True, white)
+
+#     textRect = text.get_rect()
+
+#     textRect.center = (display_height // 1.5, display_width //3 )
+
+#     while intro:
+#         window.blit(text, textRect)
+#         for event in pygame.event.get():
+
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 quit()
+
+#         button("High Scores", 325, 380, 150, 50, grey3, grey4, high_score)
+#         button("Start Game", 325, 450, 150, 50, grey3, grey4, game_loop)
+#         button("Quit", 325, 520, 150 ,50, grey3, grey4, quit)
+
+#         pygame.display.update()
+#         clock.tick(15)
+#     pass
 
 # -----------------------------------------------------------
 
@@ -368,7 +373,5 @@ def quit():
 
 # -----------------------------------------------------------
 
-game_intro()
-# add_new_score()
-# high_score()
-# timer()
+game_intro(True, "")
+

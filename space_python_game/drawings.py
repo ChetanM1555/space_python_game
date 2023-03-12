@@ -29,8 +29,8 @@ def draw1(x,y, height, width):
     Args:
         x (int): x coordinate
         y (int): x coordinate
-        height (int): height of window
-        width (int): width of window
+        height (int): height of obstacle
+        width (int): width of obstacle
     """    
 
     pygame.draw.circle(window, grey2, (x+height/2,y+width/2), width/2)
@@ -50,8 +50,8 @@ def draw2(x,y, height, width):
     Args:
         x (int): x coordinate
         y (int): x coordinate
-        height (int): height of window
-        width (int): width of window
+        height (int): height of obstacle
+        width (int): width of obstacle
     """      
 
     pygame.draw.circle(window, grey2, (x+height/2,y+width/2), width/2)
